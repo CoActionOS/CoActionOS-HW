@@ -15,7 +15,7 @@
 	<configuration id="cdt.managedbuild.config.gnu.cross.exe.debug.262901993.1322462396" name="build_lpc17xx_secure">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuildCommandParser" id="org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser" keep-relative-paths="false" name="CDT GCC Build Output Parser" parameter="(arm-cm3-eabi-gcc)|([arm-cm3-eabi-gc]\+\+)|(clang)" prefer-non-shared="true" resource-scope="per-project" store-entries-with-project="true"/>
-			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="-373526813" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT GCC Built-in Compiler Settings" parameter="arm-cm3-eabi-gcc -D__CoActionOS__ -D__lpc17xx -D__SECURE -E -P -v -dD &quot;${INPUTS}&quot;" store-entries-with-project="true">
+			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="-251201307462770397" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT GCC Built-in Compiler Settings" parameter="arm-cm3-eabi-gcc -D__CoActionOS__ -D__lpc17xx -D__SECURE -E -P -v -dD &quot;${INPUTS}&quot;" store-entries-with-project="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 				<language id="org.eclipse.cdt.core.gcc">
