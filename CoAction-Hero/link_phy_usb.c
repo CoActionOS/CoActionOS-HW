@@ -9,12 +9,11 @@
 #include <dev/pio.h>
 #include <dev/usbfifo.h>
 #include <usb_dev.h>
-
 #include <hwpl/core.h>
 #include <hwpl/debug.h>
-
 #include <usb_dev_typedefs.h>
 #include <usb_dev_defs.h>
+#include <hwdl/sys.h>
 
 #include "link_phy_usb.h"
 
@@ -125,7 +124,7 @@ const usb_dev_desc_t link_dev_desc HWPL_WEAK = {
 		.bMaxPacketSize = USB_MAX_PACKET0,
 		.idVendor = LINK_USB_VID,
 		.idProduct = LINK_USB_PID,
-		.bcdDevice = 0x131,
+		.bcdDevice = 0x132,
 		.iManufacturer = 1,
 		.iProduct = 2,
 		.iSerialNumber = 3,
@@ -294,7 +293,17 @@ link_phy_t link_phy_usb_open(const char * name){
 
 	//initialize USB device
 	usb_dev_init(fd, &link_dev_desc, &link_cfg_desc, &link_string_desc);
+
 	ioctl(fd_pio, I_PIO_SETMASK, (void*)attr.mask);
+
+#ifdef __SECURE
+	int fd_sys;
+	fd_sys = open("/dev/sys", O_RDWR);
+	if( fd_sys >= 0 ){
+		ioctl(fd_sys, I_SYS_SUDO, 0); //exit SUDO mode
+		close(fd_sys);
+	}
+#endif
 
 	return fd;
 }
