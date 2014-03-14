@@ -35,6 +35,17 @@ void led_priv_off(void * args){
 	hwpl_pio_setattr(1, &attr);
 }
 
+void led_error(void){
+	while(1){
+		uint32_t pinmask;
+		pinmask = (1<<18);
+		hwpl_core_privcall(led_priv_on, &pinmask);
+		usleep(50*1000);
+		hwpl_core_privcall(led_priv_off, &pinmask);
+		usleep(50*1000);
+	}
+}
+
 link_phy_t link_phy_open(const char * name, int baudrate){
 	link_phy_t fd;
 	uint32_t pinmask;
@@ -42,6 +53,7 @@ link_phy_t link_phy_open(const char * name, int baudrate){
 #ifdef __PHY_USB
 	fd = link_phy_usb_open();
 	if( fd <  0){
+		led_error();
 		return -1;
 	}
 
