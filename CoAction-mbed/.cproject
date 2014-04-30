@@ -262,18 +262,8 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.262901993;cdt.managedbuild.config.gnu.cross.exe.debug.262901993.;cdt.managedbuild.tool.gnu.cross.c.compiler.1604263445;cdt.managedbuild.tool.gnu.c.compiler.input.2019357839">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-D__CoActionOS -D__lpc17xx -E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;" command="arm-cm3-elf-gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.262901993.1876532313.1283381280;cdt.managedbuild.config.gnu.cross.exe.debug.262901993.1876532313.1283381280.;cdt.managedbuild.tool.gnu.cross.c.compiler.1032939575;cdt.managedbuild.tool.gnu.c.compiler.input.2108572084">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.1278734460;cdt.managedbuild.config.gnu.cross.exe.release.1278734460.;cdt.managedbuild.tool.gnu.cross.c.compiler.1379077317;cdt.managedbuild.tool.gnu.c.compiler.input.1755245328">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
@@ -284,6 +274,19 @@
 				</buildOutputProvider>
 				<scannerInfoProvider id="specsFile">
 					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;" command="arm-cm3-elf-gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.262901993;cdt.managedbuild.config.gnu.cross.exe.debug.262901993.;cdt.managedbuild.tool.gnu.cross.c.compiler.1604263445;cdt.managedbuild.tool.gnu.c.compiler.input.2019357839">
+			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-D__CoActionOS -D__lpc17xx -E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;" command="arm-cm3-elf-gcc" useDefault="true"/>
 					<parser enabled="true"/>
 				</scannerInfoProvider>
 			</profile>
