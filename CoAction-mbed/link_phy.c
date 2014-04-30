@@ -11,11 +11,39 @@
 #include <hwpl/core.h>
 #include <hwpl/debug.h>
 
+#include <dev/mlcd.h>
+#include <dev/hio.h>
+
+#include "config.h"
+
 #ifdef __PHY_USB
 #include "link_phy_usb.h"
 #endif
 
 #define LINK_REQD_CURRENT 500
+
+#ifdef XIVELY
+static void init_devices(void){
+	int fd;
+	int d;
+	fd = open("/dev/mlcd0", O_RDWR);
+	if( fd < 0 ){
+		return;
+	}
+
+	ioctl(fd, I_MLCD_INIT);
+	ioctl(fd, I_MLCD_CLEAR);
+	ioctl(fd, I_MLCD_ON);
+
+	close(fd);
+
+	d = open("/dev/hio0", O_RDWR);
+	ioctl(d, I_HIO_INIT);
+	close(d);
+
+	//A graphic could be loaded on at this point which would show at startup
+}
+#endif
 
 void led_priv_on(void * args){
 	uint32_t * pinmask = (uint32_t *)args;
@@ -95,6 +123,10 @@ link_phy_t link_phy_open(const char * name, int baudrate){
 	hwpl_core_privcall(led_priv_off, &pinmask);
 
 	link_phy_flush(fd);
+
+#ifdef XIVELY
+	init_devices();
+#endif
 
 	return fd;
 }

@@ -17,8 +17,12 @@
 #include <link.h>
 #include <sysfs.h>
 #include <cafs_lite.h>
+#include "config.h"
 
 #include "localfs.h"
+
+#include "lcd.h"
+#include "hio_dpad.h"
 
 #ifdef __PHY_USB
 #include "link_phy_usb.h"
@@ -158,6 +162,11 @@ const device_t devices[] = {
 #ifdef __PHY_USB
 		//system devices
 		USBFIFO_DEVICE("link-phy-usb", &usb0_fifo_cfg, &usb0_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
+#endif
+
+#ifdef XIVELY
+		LCD_DEVICE("mlcd0", 0666, USER_ROOT, GROUP_ROOT),
+		HIO_DPAD_DEVICE("hio0", 0666, USER_ROOT, GROUP_ROOT),
 #endif
 
 
