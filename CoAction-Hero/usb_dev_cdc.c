@@ -11,7 +11,8 @@
 int usb_dev_cdc_if_req(int event){
 	uint32_t rate = 12000000;
 
-	if ( (usb_setup_pkt.wIndex.u8[0] == 0) || (usb_setup_pkt.wIndex.u8[0] == 1) ) { //! \todo The wIndex should equal the CDC interface number
+	if ( (usb_setup_pkt.wIndex.u8[0] == 0) || (usb_setup_pkt.wIndex.u8[0] == 1) ||
+			(usb_setup_pkt.wIndex.u8[0] == 2) || (usb_setup_pkt.wIndex.u8[0] == 3) ) { //! \todo The wIndex should equal the CDC interface number
 
 		if ( (event == USB_SETUP_EVENT) ){
 			switch(usb_setup_pkt.bRequest){
