@@ -11,6 +11,7 @@
 #include <hwdl/microchip/sst25vf.h>
 #include <hwdl/microchip/enc28j60.h>
 #include <hwdl/sys.h>
+#include <hwpl/enet.h>
 #include <hwdl/uartfifo.h>
 #include <hwdl/usbfifo.h>
 #include <hwdl/fifo.h>
@@ -119,6 +120,7 @@ const device_t devices[] = {
 		DEVICE_PERIPH("eint1", hwpl_eint, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("eint2", hwpl_eint, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("eint3", hwpl_eint, 3, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
+		DEVICE_PERIPH("enet0", hwpl_enet, 3, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("pio0", hwpl_pio, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("pio1", hwpl_pio, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("pio2", hwpl_pio, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),

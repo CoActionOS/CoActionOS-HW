@@ -39,6 +39,10 @@ extern const device_t devices[];
 
 const uint32_t clk_usecond_tmr = 3;
 
+const int hwpl_core_osc_freq = 12000000;
+const int hwpl_core_cpu_freq = 96000000;
+const int hwpl_core_periph_freq = 24000000;
+
 const char _stdin_dev[] = "/dev/stdio-in" ;
 const char _stdout_dev[] = "/dev/stdio-out";
 const char _stderr_dev[] = "/dev/stdio-out";
