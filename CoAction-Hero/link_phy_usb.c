@@ -51,12 +51,8 @@ typedef struct HWPL_PACK {
 #define USB_BULKOUT_ALT (LINK_USBPHY_BULK_ENDPOINT_ALT)
 #define ENDPOINT_SIZE LINK_USBPHY_BULK_ENDPOINT_SIZE
 
-/* \details This structure defines the USB descriptors.  This
- * value is read over the control channel by the host to configure
- * the device.
- */
+
 typedef struct HWPL_PACK {
-	usb_cfg_desc_t cfg /* The configuration descriptor */;
 	usb_dev_interface_assocation_t if_asso;
 	usb_interface_desc_t ifcontrol /* The interface descriptor */;
 	link_cdc_acm_interface_t acm /*! The CDC ACM Class descriptor */;
@@ -64,14 +60,17 @@ typedef struct HWPL_PACK {
 	usb_interface_desc_t ifdata /* The interface descriptor */;
 	usb_ep_desc_t data_out /* Endpoint:  Bulk out */;
 	usb_ep_desc_t data_in /* Endpoint:  Bulk in */;
-#ifdef STDIO_VCP
-	usb_dev_interface_assocation_t if_asso_alt;
-	usb_interface_desc_t ifcontrol_alt /* The interface descriptor */;
-	link_cdc_acm_interface_t acm_alt /*! The CDC ACM Class descriptor */;
-	usb_ep_desc_t control_alt /* Endpoint:  Interrupt out for control packets */;
-	usb_interface_desc_t ifdata_alt /* The interface descriptor */;
-	usb_ep_desc_t data_out_alt /* Endpoint:  Bulk out */;
-	usb_ep_desc_t data_in_alt /* Endpoint:  Bulk in */;
+} link_vcp_t;
+
+/* \details This structure defines the USB descriptors.  This
+ * value is read over the control channel by the host to configure
+ * the device.
+ */
+typedef struct HWPL_PACK {
+	usb_cfg_desc_t cfg /* The configuration descriptor */;
+	link_vcp_t vcp0;
+#ifdef __STDIO_VCP
+	link_vcp_t vcp1;
 #endif
 	uint8_t terminator  /* A null terminator used by the driver (required) */;
 } link_cfg_desc_t;
@@ -79,17 +78,12 @@ typedef struct HWPL_PACK {
 
 extern const int microcomputer_osc_freq;
 
-#ifndef LINK_USB_VID
-/*! \details This defines the USB vendor ID used by the Link protocol.
- *
- */
-#define LINK_USB_VID 0x20A0
-#endif
 
-#ifndef LINK_USB_PID
-/*! \details This define the USB product ID used by the Link protocol.
- *
- */
+#define LINK_USB_VID 0x20A0
+
+#ifdef __STDIO_VCP
+#define LINK_USB_PID 0x413B
+#else
 #define LINK_USB_PID 0x41D5
 #endif
 
@@ -103,6 +97,14 @@ extern const int microcomputer_osc_freq;
 #define LINK_USB_DESC_MANUFACTUER_STRING 'C','o','A','c','t','i','o','n','O','S',',',' ','I','n','c'
 #define LINK_USB_DESC_PRODUCT_STRING 'C','o','A','c','t','i','o','n','O','S'
 #define LINK_USB_DESC_SERIAL_STRING '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'
+
+#ifdef __STDIO_VCP
+#define LINK_USB_DESC_VCP_0_SIZE 20
+#define LINK_USB_DESC_VCP_1_SIZE 21
+#define LINK_USB_DESC_VCP_0 'C','o','A','c','t','i','o','n','O','S',' ','L','i','n','k',' ','P','o','r','t'
+#define LINK_USB_DESC_VCP_1 'C','o','A','c','t','i','o','n','O','S',' ','S','t','d','i','o',' ','P','o','r','t'
+#endif
+
 
 #define LINK_REQD_CURRENT 500
 
@@ -118,6 +120,10 @@ struct HWPL_PACK link_usb_string_t {
 	usb_declare_string(LINK_USB_DESC_MANUFACTURER_SIZE) manufacturer;
 	usb_declare_string(LINK_USB_DESC_PRODUCT_SIZE) product;
 	usb_declare_string(LINK_USB_DESC_SERIAL_SIZE) serial;
+#ifdef __STDIO_VCP
+	usb_declare_string(LINK_USB_DESC_VCP_0_SIZE) vcp0;
+	usb_declare_string(LINK_USB_DESC_VCP_1_SIZE) vcp1;
+#endif
 };
 
 
@@ -132,14 +138,19 @@ const usb_dev_desc_t link_dev_desc HWPL_WEAK = {
 		.bLength = sizeof(usb_dev_desc_t),
 		.bDescriptorType = USB_DEVICE_DESCRIPTOR_TYPE,
 		.bcdUSB = 0x0200,
+#ifdef __STDIO_VCP
 		.bDeviceClass = USB_DEVICE_CLASS_MISCELLANEOUS,
-		//.bDeviceClass = USB_DEVICE_CLASS_COMMUNICATIONS,
 		.bDeviceSubClass = 2,
 		.bDeviceProtocol = 1,
+#else
+		.bDeviceClass = USB_DEVICE_CLASS_COMMUNICATIONS,
+		.bDeviceSubClass = 0,
+		.bDeviceProtocol = 0,
+#endif
 		.bMaxPacketSize = USB_MAX_PACKET0,
 		.idVendor = LINK_USB_VID,
 		.idProduct = LINK_USB_PID,
-		.bcdDevice = 0x132,
+		.bcdDevice = 0x160,
 		.iManufacturer = 1,
 		.iProduct = 2,
 		.iSerialNumber = 3,
@@ -152,179 +163,187 @@ const link_cfg_desc_t link_cfg_desc HWPL_WEAK = {
 				.bLength = sizeof(usb_cfg_desc_t),
 				.bDescriptorType = USB_CONFIGURATION_DESCRIPTOR_TYPE,
 				.wTotalLength = sizeof(link_cfg_desc_t)-1, //exclude the zero terminator
+#ifdef __STDIO_VCP
 				.bNumInterfaces = 0x04,
+#else
+				.bNumInterfaces = 0x02,
+#endif
 				.bConfigurationValue = 0x01,
 				.iConfiguration = 0x03,
 				.bmAttributes = USB_CONFIG_BUS_POWERED,
 				.bMaxPower = USB_CONFIG_POWER_MA( LINK_REQD_CURRENT )
 		},
 
-		.if_asso = {
-				.bLength = sizeof(usb_dev_interface_assocation_t),
-				.bDescriptorType = USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,
-				.bFirstInterface = 0,
-				.bInterfaceCount = 2,
-				.bFunctionClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
-				.bFunctionSubClass = USB_INTERFACE_SUBCLASS_ACM,
-				.bFunctionProtocol = USB_INTERFACE_PROTOCOL_V25TER,
-				.iFunction = 2,
+		.vcp0 = {
+				.if_asso = {
+						.bLength = sizeof(usb_dev_interface_assocation_t),
+						.bDescriptorType = USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,
+						.bFirstInterface = 0,
+						.bInterfaceCount = 2,
+						.bFunctionClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+						.bFunctionSubClass = USB_INTERFACE_SUBCLASS_ACM,
+						.bFunctionProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+						.iFunction = 0x04,
+				},
+
+				.ifcontrol = {
+						.bLength = sizeof(usb_interface_desc_t),
+						.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
+						.bInterfaceNumber = 0x00,
+						.bAlternateSetting = 0x00,
+						.bNumEndpoints = 0x01,
+						.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+						.bInterfaceSubClass = USB_INTERFACE_SUBCLASS_ACM,
+						.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+						.iInterface = 0x04
+				},
+
+				.acm = {
+						.header.bLength = sizeof(usb_dev_cdc_header_t),
+						.header.bDescriptorType = 0x24,
+						.header.bDescriptorSubType = 0x00,
+						.header.bcdCDC = 0x0110,
+						.acm.bFunctionLength = sizeof(usb_dev_cdc_acm_t),
+						.acm.bDescriptorType = 0x24,
+						.acm.bDescriptorSubType = 0x02,
+						.acm.bmCapabilities = 0x00,
+						.union_descriptor.bFunctionLength = sizeof(usb_dev_cdc_uniondescriptor_t),
+						.union_descriptor.bDescriptorType = 0x24,
+						.union_descriptor.bDescriptorSubType = 0x06,
+						.union_descriptor.bMasterInterface = 0x00,
+						.union_descriptor.bSlaveInterface = 0x01,
+						.call_management.bFunctionLength = sizeof(usb_dev_cdc_callmanagement_t),
+						.call_management.bDescriptorType = 0x24,
+						.call_management.bDescriptorSubType = 0x01,
+						.call_management.bmCapabilities = 0x00,
+						.call_management.bDataInterface = 0x01
+				},
+
+				.control = {
+						.bLength= sizeof(usb_ep_desc_t),
+						.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+						.bEndpointAddress=USB_INTIN,
+						.bmAttributes=USB_ENDPOINT_TYPE_INTERRUPT,
+						.wMaxPacketSize=LINK_INTERRUPT_ENDPOINT_SIZE,
+						.bInterval=1
+				},
+
+				.ifdata = {
+						.bLength = sizeof(usb_interface_desc_t),
+						.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
+						.bInterfaceNumber = 0x01,
+						.bAlternateSetting = 0x00,
+						.bNumEndpoints = 0x02,
+						.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS_DATA,
+						.bInterfaceSubClass = 0x00,
+						.bInterfaceProtocol = 0x00,
+						.iInterface = 0x04
+				},
+
+				.data_out = {
+						.bLength= sizeof(usb_ep_desc_t),
+						.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+						.bEndpointAddress=USB_BULKOUT,
+						.bmAttributes=USB_ENDPOINT_TYPE_BULK,
+						.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
+						.bInterval=1
+				},
+
+				.data_in = {
+						.bLength= sizeof(usb_ep_desc_t),
+						.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+						.bEndpointAddress=USB_BULKIN,
+						.bmAttributes=USB_ENDPOINT_TYPE_BULK,
+						.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
+						.bInterval=1
+				}
 		},
 
-		.ifcontrol = {
-				.bLength = sizeof(usb_interface_desc_t),
-				.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
-				.bInterfaceNumber = 0x00,
-				.bAlternateSetting = 0x00,
-				.bNumEndpoints = 0x01,
-				.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
-				.bInterfaceSubClass = USB_INTERFACE_SUBCLASS_ACM,
-				.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_V25TER,
-				.iInterface = 0x00
-		},
+#ifdef __STDIO_VCP
 
-		.acm = {
-				.header.bLength = sizeof(usb_dev_cdc_header_t),
-				.header.bDescriptorType = 0x24,
-				.header.bDescriptorSubType = 0x00,
-				.header.bcdCDC = 0x0110,
-				.acm.bFunctionLength = sizeof(usb_dev_cdc_acm_t),
-				.acm.bDescriptorType = 0x24,
-				.acm.bDescriptorSubType = 0x02,
-				.acm.bmCapabilities = 0x00,
-				.union_descriptor.bFunctionLength = sizeof(usb_dev_cdc_uniondescriptor_t),
-				.union_descriptor.bDescriptorType = 0x24,
-				.union_descriptor.bDescriptorSubType = 0x06,
-				.union_descriptor.bMasterInterface = 0x00,
-				.union_descriptor.bSlaveInterface = 0x01,
-				.call_management.bFunctionLength = sizeof(usb_dev_cdc_callmanagement_t),
-				.call_management.bDescriptorType = 0x24,
-				.call_management.bDescriptorSubType = 0x01,
-				.call_management.bmCapabilities = 0x00,
-				.call_management.bDataInterface = 0x01
-		},
+		.vcp1 = {
+				.if_asso = {
+						.bLength = sizeof(usb_dev_interface_assocation_t),
+						.bDescriptorType = USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,
+						.bFirstInterface = 2,
+						.bInterfaceCount = 2,
+						.bFunctionClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+						.bFunctionSubClass = USB_INTERFACE_SUBCLASS_ACM,
+						.bFunctionProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+						.iFunction = 0x05,
+				},
 
-		.control = {
-				.bLength= sizeof(usb_ep_desc_t),
-				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
-				.bEndpointAddress=USB_INTIN,
-				.bmAttributes=USB_ENDPOINT_TYPE_INTERRUPT,
-				.wMaxPacketSize=LINK_INTERRUPT_ENDPOINT_SIZE,
-				.bInterval=1
-		},
+				.ifcontrol = {
+						.bLength = sizeof(usb_interface_desc_t),
+						.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
+						.bInterfaceNumber = 0x02,
+						.bAlternateSetting = 0x00,
+						.bNumEndpoints = 0x01,
+						.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+						.bInterfaceSubClass = USB_INTERFACE_SUBCLASS_ACM,
+						.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+						.iInterface = 0x05
+				},
 
-		.ifdata = {
-				.bLength = sizeof(usb_interface_desc_t),
-				.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
-				.bInterfaceNumber = 0x01,
-				.bAlternateSetting = 0x00,
-				.bNumEndpoints = 0x02,
-				.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS_DATA,
-				.bInterfaceSubClass = 0x00,
-				.bInterfaceProtocol = 0x00,
-				.iInterface = 0x00
-		},
+				.acm = {
+						.header.bLength = sizeof(usb_dev_cdc_header_t),
+						.header.bDescriptorType = 0x24,
+						.header.bDescriptorSubType = 0x00,
+						.header.bcdCDC = 0x0110,
+						.acm.bFunctionLength = sizeof(usb_dev_cdc_acm_t),
+						.acm.bDescriptorType = 0x24,
+						.acm.bDescriptorSubType = 0x02,
+						.acm.bmCapabilities = 0x00,
+						.union_descriptor.bFunctionLength = sizeof(usb_dev_cdc_uniondescriptor_t),
+						.union_descriptor.bDescriptorType = 0x24,
+						.union_descriptor.bDescriptorSubType = 0x06,
+						.union_descriptor.bMasterInterface = 0x02,
+						.union_descriptor.bSlaveInterface = 0x03,
+						.call_management.bFunctionLength = sizeof(usb_dev_cdc_callmanagement_t),
+						.call_management.bDescriptorType = 0x24,
+						.call_management.bDescriptorSubType = 0x01,
+						.call_management.bmCapabilities = 0x00,
+						.call_management.bDataInterface = 0x03
+				},
 
-		.data_out = {
-				.bLength= sizeof(usb_ep_desc_t),
-				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
-				.bEndpointAddress=USB_BULKOUT,
-				.bmAttributes=USB_ENDPOINT_TYPE_BULK,
-				.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
-				.bInterval=1
-		},
+				.control = {
+						.bLength= sizeof(usb_ep_desc_t),
+						.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+						.bEndpointAddress=USB_INTIN_ALT,
+						.bmAttributes=USB_ENDPOINT_TYPE_INTERRUPT,
+						.wMaxPacketSize=LINK_INTERRUPT_ENDPOINT_SIZE,
+						.bInterval=1
+				},
 
-		.data_in = {
-				.bLength= sizeof(usb_ep_desc_t),
-				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
-				.bEndpointAddress=USB_BULKIN,
-				.bmAttributes=USB_ENDPOINT_TYPE_BULK,
-				.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
-				.bInterval=1
-		},
+				.ifdata = {
+						.bLength = sizeof(usb_interface_desc_t),
+						.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
+						.bInterfaceNumber = 0x03,
+						.bAlternateSetting = 0x00,
+						.bNumEndpoints = 0x02,
+						.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS_DATA,
+						.bInterfaceSubClass = 0x00,
+						.bInterfaceProtocol = 0x00,
+						.iInterface = 0x05
+				},
 
-#ifdef STDIO_VCP
+				.data_out = {
+						.bLength= sizeof(usb_ep_desc_t),
+						.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+						.bEndpointAddress=USB_BULKOUT_ALT,
+						.bmAttributes=USB_ENDPOINT_TYPE_BULK,
+						.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
+						.bInterval=1
+				},
 
-		.if_asso_alt = {
-				.bLength = sizeof(usb_dev_interface_assocation_t),
-				.bDescriptorType = USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,
-				.bFirstInterface = 2,
-				.bInterfaceCount = 2,
-				.bFunctionClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
-				.bFunctionSubClass = USB_INTERFACE_SUBCLASS_ACM,
-				.bFunctionProtocol = USB_INTERFACE_PROTOCOL_V25TER,
-				.iFunction = 0x00,
-		},
-
-		.ifcontrol_alt = {
-				.bLength = sizeof(usb_interface_desc_t),
-				.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
-				.bInterfaceNumber = 0x02,
-				.bAlternateSetting = 0x00,
-				.bNumEndpoints = 0x01,
-				.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
-				.bInterfaceSubClass = USB_INTERFACE_SUBCLASS_ACM,
-				.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_V25TER,
-				.iInterface = 0x00
-		},
-
-		.acm_alt = {
-				.header.bLength = sizeof(usb_dev_cdc_header_t),
-				.header.bDescriptorType = 0x24,
-				.header.bDescriptorSubType = 0x00,
-				.header.bcdCDC = 0x0110,
-				.acm.bFunctionLength = sizeof(usb_dev_cdc_acm_t),
-				.acm.bDescriptorType = 0x24,
-				.acm.bDescriptorSubType = 0x02,
-				.acm.bmCapabilities = 0x00,
-				.union_descriptor.bFunctionLength = sizeof(usb_dev_cdc_uniondescriptor_t),
-				.union_descriptor.bDescriptorType = 0x24,
-				.union_descriptor.bDescriptorSubType = 0x06,
-				.union_descriptor.bMasterInterface = 0x02,
-				.union_descriptor.bSlaveInterface = 0x03,
-				.call_management.bFunctionLength = sizeof(usb_dev_cdc_callmanagement_t),
-				.call_management.bDescriptorType = 0x24,
-				.call_management.bDescriptorSubType = 0x01,
-				.call_management.bmCapabilities = 0x00,
-				.call_management.bDataInterface = 0x03
-		},
-
-		.control_alt = {
-				.bLength= sizeof(usb_ep_desc_t),
-				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
-				.bEndpointAddress=USB_INTIN_ALT,
-				.bmAttributes=USB_ENDPOINT_TYPE_INTERRUPT,
-				.wMaxPacketSize=LINK_INTERRUPT_ENDPOINT_SIZE,
-				.bInterval=1
-		},
-
-		.ifdata_alt = {
-				.bLength = sizeof(usb_interface_desc_t),
-				.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
-				.bInterfaceNumber = 0x03,
-				.bAlternateSetting = 0x00,
-				.bNumEndpoints = 0x02,
-				.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS_DATA,
-				.bInterfaceSubClass = 0x00,
-				.bInterfaceProtocol = 0x00,
-				.iInterface = 0x00
-		},
-
-		.data_out_alt = {
-				.bLength= sizeof(usb_ep_desc_t),
-				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
-				.bEndpointAddress=USB_BULKOUT_ALT,
-				.bmAttributes=USB_ENDPOINT_TYPE_BULK,
-				.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
-				.bInterval=1
-		},
-
-		.data_in_alt = {
-				.bLength= sizeof(usb_ep_desc_t),
-				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
-				.bEndpointAddress=USB_BULKIN_ALT,
-				.bmAttributes=USB_ENDPOINT_TYPE_BULK,
-				.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
-				.bInterval=1
+				.data_in = {
+						.bLength= sizeof(usb_ep_desc_t),
+						.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+						.bEndpointAddress=USB_BULKIN_ALT,
+						.bmAttributes=USB_ENDPOINT_TYPE_BULK,
+						.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
+						.bInterval=1
+				}
 		},
 #endif
 
@@ -352,10 +371,16 @@ const struct link_usb_string_t link_string_desc HWPL_WEAK = {
 		.wLANGID = 0x0409, //English
 		.manufacturer = usb_assign_string(LINK_USB_DESC_MANUFACTURER_SIZE, LINK_USB_DESC_MANUFACTUER_STRING),
 		.product = usb_assign_string(LINK_USB_DESC_PRODUCT_SIZE, LINK_USB_DESC_PRODUCT_STRING),
-		.serial = usb_assign_string(LINK_USB_DESC_SERIAL_SIZE, 0) //dynamically load SN based on silicon
+		.serial = usb_assign_string(LINK_USB_DESC_SERIAL_SIZE, 0)
+#ifdef __STDIO_VCP
+		, //dynamically load SN based on silicon
+		.vcp0 = usb_assign_string(LINK_USB_DESC_VCP_0_SIZE, LINK_USB_DESC_VCP_0),
+		.vcp1 = usb_assign_string(LINK_USB_DESC_VCP_1_SIZE, LINK_USB_DESC_VCP_1)
+#endif
+
 };
 
-#ifdef STDIO_VCP
+#ifdef __STDIO_VCP
 void init_stdio_vcp(){
 	int fd;
 	fd = open("/dev/stdio", O_RDWR);
@@ -417,7 +442,7 @@ link_phy_t link_phy_usb_open(const char * name){
 	}
 #endif
 
-#ifdef STDIO_VCP
+#ifdef __STDIO_VCP
 	init_stdio_vcp();
 #endif
 

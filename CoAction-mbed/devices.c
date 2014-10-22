@@ -33,21 +33,38 @@
 #define CAOS_SYSTEM_MEMORY_SIZE 8192
 
 
+const int hwpl_core_osc_freq = 12000000;
+const int hwpl_core_cpu_freq = 96000000;
+const int hwpl_core_periph_freq = 24000000;
+
 /* DO NOT MODIFY SECTION */
-const int cpu_init_freq = CAOS_SYSTEM_CLOCK;
 const int caoslib_system_memory_size = CAOS_SYSTEM_MEMORY_SIZE;
 const uint32_t clk_nsec_div = (uint32_t)((uint64_t)1024 * 1000000000 / CAOS_SYSTEM_CLOCK);
 const uint32_t clk_usec_mult = (uint32_t)(CAOS_SYSTEM_CLOCK / 1000000);
-const int microcomputer_osc_freq = 12000000;
 const pio_t gled = { .port = 1, .pin = 18 };
 extern const device_t devices[];
 /* END OF DO NOT MODIFY SECTION */
 
 const uint32_t clk_usecond_tmr = 3;
 
+#ifdef STDIO_VCP
+const char _stdin_dev[] = "/dev/stdio" ;
+const char _stdout_dev[] = "/dev/stdio";
+const char _stderr_dev[] = "/dev/stdio";
+#else
 const char _stdin_dev[] = "/dev/stdio-in" ;
 const char _stdout_dev[] = "/dev/stdio-out";
 const char _stderr_dev[] = "/dev/stdio-out";
+#endif
+
+const char _sys_version[] = "1.0.0";
+
+#ifdef XIVELY
+const char _sys_name[] = "CoAction MbedX";
+#else
+const char _sys_name[] = "CoAction Mbed";
+#endif
+
 
 #define USER_ROOT 0
 #define GROUP_ROOT 0
@@ -64,19 +81,12 @@ volatile int usbdev_stat;
  */
 const sst25vf_cfg_t sst25vf_cfg = SST25VF_DEVICE_CFG(-1, 0, -1, 0, 0, 17, 1*1024*1024);
 
-#define UART0_DEVFIFO_BUFFER_SIZE 512
+#define UART0_DEVFIFO_BUFFER_SIZE 1024
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
 const uartfifo_cfg_t uart0_fifo_cfg = UARTFIFO_DEVICE_CFG(0,
 		uart0_fifo_buffer,
 		UART0_DEVFIFO_BUFFER_SIZE);
 uartfifo_state_t uart0_fifo_state HWPL_SYS_MEM;
-
-#define UART1_DEVFIFO_BUFFER_SIZE 512
-char uart1_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
-const uartfifo_cfg_t uart1_fifo_cfg = UARTFIFO_DEVICE_CFG(1,
-		uart1_fifo_buffer,
-		UART1_DEVFIFO_BUFFER_SIZE);
-uartfifo_state_t uart1_fifo_state HWPL_SYS_MEM;
 
 #ifdef __PHY_USB
 #define USB0_DEVFIFO_BUFFER_SIZE 64
@@ -90,15 +100,26 @@ usbfifo_state_t usb0_fifo_state HWPL_SYS_MEM;
 #endif
 
 #define STDIO_BUFFER_SIZE 128
+
+#ifdef STDIO_VCP
+char usb0_fifo_buffer_alt[STDIO_BUFFER_SIZE];
+const usbfifo_cfg_t usb0_fifo_cfg_alt = USBFIFO_DEVICE_CFG(0,
+		LINK_USBPHY_BULK_ENDPOINT_ALT,
+		LINK_USBPHY_BULK_ENDPOINT_SIZE,
+		usb0_fifo_buffer_alt,
+		STDIO_BUFFER_SIZE);
+usbfifo_state_t usb0_fifo_state_alt HWPL_SYS_MEM;
+#else
 char stdio_out_buffer[STDIO_BUFFER_SIZE];
 char stdio_in_buffer[STDIO_BUFFER_SIZE];
-
 fifo_cfg_t stdio_out_cfg = { .buffer = stdio_out_buffer, .size = STDIO_BUFFER_SIZE };
 fifo_cfg_t stdio_in_cfg = { .buffer = stdio_in_buffer, .size = STDIO_BUFFER_SIZE };
 fifo_state_t stdio_out_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0, .wop = NULL, .wop_len = 0 };
 fifo_state_t stdio_in_state = {
 		.head = 0, .tail = 0, .rop = NULL, .rop_len = 0, .wop = NULL, .wop_len = 0
 };
+#endif
+
 
 enc28j60_state_t enc28j60_state;
 const enc28j60_cfg_t enc28j60_cfg = { .rx_buffer_size = 1024, .tx_buffer_size = 1024 };
@@ -140,7 +161,7 @@ const device_t devices[] = {
 		DEVICE_PERIPH("tmr2", hwpl_tmr, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		UARTFIFO_DEVICE("uart0", &uart0_fifo_cfg, &uart0_fifo_state, 0666, USER_ROOT, GROUP_ROOT), //USE ADDITIONAL FIFO
 		//DEVICE_PERIPH("uart0", hwpl_uart, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR), //NO ADDITIONAL FIFO
-		UARTFIFO_DEVICE("uart1", &uart1_fifo_cfg, &uart1_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
+		//UARTFIFO_DEVICE("uart1", &uart1_fifo_cfg, &uart1_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
 		//DEVICE_PERIPH("uart1", hwpl_uart, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("uart2", hwpl_uart, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("uart3", hwpl_uart, 3, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
@@ -151,8 +172,12 @@ const device_t devices[] = {
 		//ENC28J60_DEVICE("eth0", 1, 0, 0, 6, 20000000, &enc28j60_cfg, &enc28j60_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//FIFO buffers used for std in and std out
+#ifdef STDIO_VCP
+		USBFIFO_DEVICE("stdio", &usb0_fifo_cfg_alt, &usb0_fifo_state_alt, 0666, USER_ROOT, GROUP_ROOT),
+#else
 		FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
 		FIFO_DEVICE("stdio-in", &stdio_in_cfg, &stdio_in_state, 0666, USER_ROOT, GROUP_ROOT),
+#endif
 
 		//system devices
 		LED_DEVICE("gled", LED_ACTIVE_LOW,
@@ -181,7 +206,7 @@ extern const cafs_lite_cfg_t cafs_lite_cfg;
 const sysfs_t const sysfs_list[] = {
 		SYSFS_APP("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
 		SYSFS_DEV("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
-		LOCALFS("/home", 0, SYSFS_ALL_ACCESS), //the list of devices
+		//LOCALFS("/home", 0, SYSFS_ALL_ACCESS), //the list of devices
 		SYSFS_ROOT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem
 		SYSFS_TERMINATOR
 };

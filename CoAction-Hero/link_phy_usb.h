@@ -8,7 +8,7 @@
 #ifndef LINK_PHY_USB_H_
 #define LINK_PHY_USB_H_
 
-//#define STDIO_VCP
+//#define __STDIO_VCP
 
 #define LINK_USBPHY_BULK_ENDPOINT (0x2)
 #define LINK_USBPHY_BULK_ENDPOINT_ALT (0x5)

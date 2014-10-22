@@ -88,11 +88,30 @@ int localfs_mkfs(const void * cfg){
 }
 
 int localfs_fstat(const void * cfg, void * handle, struct stat * stat){
-	int ret = 0; return ret;
+	int ret = 0;
+	int h = (int)handle;
+
+	//needs to be implemented
+	memset(stat, 0, sizeof(struct stat));
+	stat->st_size = semihost_flen(h);
+
+	return ret;
 }
 
 int localfs_stat(const void * cfg, const char * path, struct stat * stat){
-	int ret = 0; return ret;
+	int fd;
+
+	fd = semihost_open(path, 0);
+	if( fd < 0 ){
+		errno = ENOENT;
+		return -1;
+	}
+
+	memset(stat, 0, sizeof(struct stat));
+	stat->st_size = semihost_flen(fd);
+	semihost_close(fd);
+
+	return 0;
 }
 
 int localfs_unlink(const void * cfg, const char * path){

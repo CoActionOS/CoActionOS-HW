@@ -47,6 +47,10 @@ const char _stdin_dev[] = "/dev/stdio-in" ;
 const char _stdout_dev[] = "/dev/stdio-out";
 const char _stderr_dev[] = "/dev/stdio-out";
 
+const char _sys_name[] = "Haoyu LPC1788";
+const char _sys_version[] = "0.0.1";
+
+
 #define USER_ROOT 0
 #define GROUP_ROOT 0
 
@@ -125,9 +129,11 @@ const device_t devices[] = {
 		DEVICE_PERIPH("pio2", hwpl_pio, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("pio3", hwpl_pio, 3, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("pio4", hwpl_pio, 4, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
+		DEVICE_PERIPH("pio5", hwpl_pio, 5, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("i2c0", hwpl_i2c, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("i2c1", hwpl_i2c, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("i2c2", hwpl_i2c, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
+		DEVICE_PERIPH("mci0", hwpl_mci, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		//DEVICE_PERIPH("pwm1", hwpl_pwm, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFBLK),
 		//DEVICE_PERIPH("qei0", hwpl_qei, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("rtc", hwpl_rtc, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),

@@ -40,8 +40,11 @@ typedef struct HWPL_PACK {
 
 #define USB_PORT 0
 #define USB_INTIN 0x81
+#define USB_INTIN_ALT 0x84
 #define USB_BULKIN (0x80|LINK_USBPHY_BULK_ENDPOINT)
 #define USB_BULKOUT (LINK_USBPHY_BULK_ENDPOINT)
+#define USB_BULKIN_ALT (0x80|LINK_USBPHY_BULK_ENDPOINT_ALT)
+#define USB_BULKOUT_ALT (LINK_USBPHY_BULK_ENDPOINT_ALT)
 #define ENDPOINT_SIZE LINK_USBPHY_BULK_ENDPOINT_SIZE
 
 /* \details This structure defines the USB descriptors.  This
@@ -50,19 +53,28 @@ typedef struct HWPL_PACK {
  */
 typedef struct HWPL_PACK {
 	usb_cfg_desc_t cfg /* The configuration descriptor */;
-	//usb_dev_interface_assocation_t ifasso;
+	usb_dev_interface_assocation_t if_asso;
 	usb_interface_desc_t ifcontrol /* The interface descriptor */;
 	link_cdc_acm_interface_t acm /*! The CDC ACM Class descriptor */;
 	usb_ep_desc_t control /* Endpoint:  Interrupt out for control packets */;
 	usb_interface_desc_t ifdata /* The interface descriptor */;
 	usb_ep_desc_t data_out /* Endpoint:  Bulk out */;
 	usb_ep_desc_t data_in /* Endpoint:  Bulk in */;
+#ifdef STDIO_VCP
+	usb_dev_interface_assocation_t if_asso_alt;
+	usb_interface_desc_t ifcontrol_alt /* The interface descriptor */;
+	link_cdc_acm_interface_t acm_alt /*! The CDC ACM Class descriptor */;
+	usb_ep_desc_t control_alt /* Endpoint:  Interrupt out for control packets */;
+	usb_interface_desc_t ifdata_alt /* The interface descriptor */;
+	usb_ep_desc_t data_out_alt /* Endpoint:  Bulk out */;
+	usb_ep_desc_t data_in_alt /* Endpoint:  Bulk in */;
+#endif
 	uint8_t terminator  /* A null terminator used by the driver (required) */;
 } link_cfg_desc_t;
 
 
 
-extern const int microcomputer_osc_freq;
+extern const int hwpl_core_osc_freq;
 
 
 #ifndef LINK_USB_VID
@@ -76,7 +88,12 @@ extern const int microcomputer_osc_freq;
 /*! \details This define the USB product ID used by the Link protocol.
  *
  */
-#define LINK_USB_PID 0x41D5
+
+#ifdef STDIO_VCP
+#define LINK_USB_PID 0x413b
+#else
+#define LINK_USB_PID 0x41d5
+#endif
 #endif
 
 #ifndef LINK_USB_DEV_PORT
@@ -118,9 +135,15 @@ const usb_dev_desc_t link_dev_desc HWPL_WEAK = {
 		.bLength = sizeof(usb_dev_desc_t),
 		.bDescriptorType = USB_DEVICE_DESCRIPTOR_TYPE,
 		.bcdUSB = 0x0200,
+#ifdef STDIO_VCP
+		.bDeviceClass = USB_DEVICE_CLASS_MISCELLANEOUS,
+		.bDeviceSubClass = 2,
+		.bDeviceProtocol = 1,
+#else
 		.bDeviceClass = USB_DEVICE_CLASS_COMMUNICATIONS,
 		.bDeviceSubClass = 0,
 		.bDeviceProtocol = 0,
+#endif
 		.bMaxPacketSize = USB_MAX_PACKET0,
 		.idVendor = LINK_USB_VID,
 		.idProduct = LINK_USB_PID,
@@ -137,26 +160,27 @@ const link_cfg_desc_t link_cfg_desc HWPL_WEAK = {
 				.bLength = sizeof(usb_cfg_desc_t),
 				.bDescriptorType = USB_CONFIGURATION_DESCRIPTOR_TYPE,
 				.wTotalLength = sizeof(link_cfg_desc_t)-1, //exclude the zero terminator
+#ifdef STDIO_VCP
+				.bNumInterfaces = 0x04,
+#else
 				.bNumInterfaces = 0x02,
+#endif
 				.bConfigurationValue = 0x01,
 				.iConfiguration = 0x03,
 				.bmAttributes = USB_CONFIG_BUS_POWERED,
 				.bMaxPower = USB_CONFIG_POWER_MA( LINK_REQD_CURRENT )
 		},
 
-		//This is the assocation interface -- still testing to see if it is necessary
-		/*
-		.ifasso = {
+		.if_asso = {
 				.bLength = sizeof(usb_dev_interface_assocation_t),
-				.bDescriptorType = 11,
+				.bDescriptorType = USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,
 				.bFirstInterface = 0,
 				.bInterfaceCount = 2,
-				.bFunctionClass = 2,
-				.bFunctionSubClass = 2,
-				.bFunctionProtocol = 0,
-				.iFunction = 0x03,
+				.bFunctionClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+				.bFunctionSubClass = USB_INTERFACE_SUBCLASS_ACM,
+				.bFunctionProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+				.iFunction = 2,
 		},
-		 */
 
 		.ifcontrol = {
 				.bLength = sizeof(usb_interface_desc_t),
@@ -230,10 +254,97 @@ const link_cfg_desc_t link_cfg_desc HWPL_WEAK = {
 				.bInterval=1
 		},
 
+#ifdef STDIO_VCP
+
+		.if_asso_alt = {
+				.bLength = sizeof(usb_dev_interface_assocation_t),
+				.bDescriptorType = USB_INTERFACE_ASSOCIATION_DESCRIPTOR_TYPE,
+				.bFirstInterface = 2,
+				.bInterfaceCount = 2,
+				.bFunctionClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+				.bFunctionSubClass = USB_INTERFACE_SUBCLASS_ACM,
+				.bFunctionProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+				.iFunction = 0x00,
+		},
+
+		.ifcontrol_alt = {
+				.bLength = sizeof(usb_interface_desc_t),
+				.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
+				.bInterfaceNumber = 0x02,
+				.bAlternateSetting = 0x00,
+				.bNumEndpoints = 0x01,
+				.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS,
+				.bInterfaceSubClass = USB_INTERFACE_SUBCLASS_ACM,
+				.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_V25TER,
+				.iInterface = 0x00
+		},
+
+		.acm_alt = {
+				.header.bLength = sizeof(usb_dev_cdc_header_t),
+				.header.bDescriptorType = 0x24,
+				.header.bDescriptorSubType = 0x00,
+				.header.bcdCDC = 0x0110,
+				.acm.bFunctionLength = sizeof(usb_dev_cdc_acm_t),
+				.acm.bDescriptorType = 0x24,
+				.acm.bDescriptorSubType = 0x02,
+				.acm.bmCapabilities = 0x00,
+				.union_descriptor.bFunctionLength = sizeof(usb_dev_cdc_uniondescriptor_t),
+				.union_descriptor.bDescriptorType = 0x24,
+				.union_descriptor.bDescriptorSubType = 0x06,
+				.union_descriptor.bMasterInterface = 0x02,
+				.union_descriptor.bSlaveInterface = 0x03,
+				.call_management.bFunctionLength = sizeof(usb_dev_cdc_callmanagement_t),
+				.call_management.bDescriptorType = 0x24,
+				.call_management.bDescriptorSubType = 0x01,
+				.call_management.bmCapabilities = 0x00,
+				.call_management.bDataInterface = 0x03
+		},
+
+		.control_alt = {
+				.bLength= sizeof(usb_ep_desc_t),
+				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+				.bEndpointAddress=USB_INTIN_ALT,
+				.bmAttributes=USB_ENDPOINT_TYPE_INTERRUPT,
+				.wMaxPacketSize=LINK_INTERRUPT_ENDPOINT_SIZE,
+				.bInterval=1
+		},
+
+		.ifdata_alt = {
+				.bLength = sizeof(usb_interface_desc_t),
+				.bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE,
+				.bInterfaceNumber = 0x03,
+				.bAlternateSetting = 0x00,
+				.bNumEndpoints = 0x02,
+				.bInterfaceClass = USB_INTERFACE_CLASS_COMMUNICATIONS_DATA,
+				.bInterfaceSubClass = 0x00,
+				.bInterfaceProtocol = 0x00,
+				.iInterface = 0x00
+		},
+
+		.data_out_alt = {
+				.bLength= sizeof(usb_ep_desc_t),
+				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+				.bEndpointAddress=USB_BULKOUT_ALT,
+				.bmAttributes=USB_ENDPOINT_TYPE_BULK,
+				.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
+				.bInterval=1
+		},
+
+		.data_in_alt = {
+				.bLength= sizeof(usb_ep_desc_t),
+				.bDescriptorType=USB_ENDPOINT_DESCRIPTOR_TYPE,
+				.bEndpointAddress=USB_BULKIN_ALT,
+				.bmAttributes=USB_ENDPOINT_TYPE_BULK,
+				.wMaxPacketSize=LINK_BULK_ENDPOINT_SIZE,
+				.bInterval=1
+		},
+#endif
+
 
 
 		.terminator = 0
 };
+
 
 
 #define CONNECT_PORT "/dev/pio2"
@@ -256,6 +367,23 @@ const struct link_usb_string_t link_string_desc HWPL_WEAK = {
 		.product = usb_assign_string(LINK_USB_DESC_PRODUCT_SIZE, LINK_USB_DESC_PRODUCT_STRING),
 		.serial = usb_assign_string(LINK_USB_DESC_SERIAL_SIZE, 0) //dynamically load SN based on silicon
 };
+
+
+
+#ifdef STDIO_VCP
+void init_stdio_vcp(){
+	int fd;
+	fd = open("/dev/stdio", O_RDWR);
+	if( fd < 0 ){
+		return;
+	}
+
+	ioctl(fd, I_FIFO_INIT);
+	close(fd);
+	return;
+}
+#endif
+
 
 link_phy_t link_phy_usb_open(void){
 	link_phy_t fd;
@@ -288,7 +416,7 @@ link_phy_t link_phy_usb_open(void){
 
 	usb_attr.pin_assign = 0;
 	usb_attr.mode = USB_ATTR_MODE_DEVICE;
-	usb_attr.crystal_freq = microcomputer_osc_freq;
+	usb_attr.crystal_freq = hwpl_core_osc_freq;
 	if( ioctl(fd, I_USB_SETATTR, &usb_attr) < 0 ){
 		return LINK_PHY_ERROR;
 	}
@@ -297,6 +425,9 @@ link_phy_t link_phy_usb_open(void){
 	usb_dev_init(fd, &link_dev_desc, &link_cfg_desc, &link_string_desc);
 	ioctl(fd_pio, I_PIO_CLRMASK, (void*)attr.mask);
 
+#ifdef STDIO_VCP
+	init_stdio_vcp();
+#endif
 
 	return fd;
 }

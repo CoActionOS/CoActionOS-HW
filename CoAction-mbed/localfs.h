@@ -54,7 +54,9 @@ int localfs_stat(const void * cfg, const char * path, struct stat * stat);
 #define LOCALFS(mount_loc_name, cfgp, access_mode) { \
 		.mount_path = mount_loc_name, \
 		.access = access_mode, \
-		.init = localfs_init, \
+		.mount = localfs_init, \
+		.unmount = SYSFS_NOTSUP, \
+		.ismounted = sysfs_always_mounted, \
 		.startup = SYSFS_NOTSUP, \
 		.mkfs = localfs_mkfs, \
 		.open = localfs_open, \

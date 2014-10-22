@@ -37,13 +37,17 @@ const char sys_key[32] = {
 };
 #endif
 
+#ifdef __PUBLIC
+const int cpu_init_freq = 96000000;
+#else
 const int hwpl_core_osc_freq = 12000000;
-const int hwpl_core_cpu_freq = 96000000;
-const int hwpl_core_periph_freq = 24000000;
+const int hwpl_core_cpu_freq = CAOS_SYSTEM_CLOCK;
+const int hwpl_core_periph_freq = CAOS_SYSTEM_CLOCK;
+#endif
+
+
 
 /* DO NOT MODIFY SECTION */
-const int cpu_init_freq = CAOS_SYSTEM_CLOCK;
-const int caoslib_system_memory_size = CAOS_SYSTEM_MEMORY_SIZE;
 const uint32_t clk_nsec_div = (uint32_t)((uint64_t)1024 * 1000000000 / CAOS_SYSTEM_CLOCK);
 const uint32_t clk_usec_mult = (uint32_t)(CAOS_SYSTEM_CLOCK / 1000000);
 const int microcomputer_osc_freq = 12000000;
@@ -54,7 +58,7 @@ extern const device_t devices[];
 const uint32_t clk_usecond_tmr = 3;
 
 
-#ifdef STDIO_VCP
+#ifdef __STDIO_VCP
 const char _stdin_dev[] = "/dev/stdio" ;
 const char _stdout_dev[] = "/dev/stdio";
 const char _stderr_dev[] = "/dev/stdio";
@@ -65,6 +69,13 @@ const char _stderr_dev[] = "/dev/stdio-out";
 #endif
 
 const char _sys_name[] = "CoAction Hero";
+const char _sys_version[] = "1.0.0";
+const int _sys_memory_size = CAOS_SYSTEM_MEMORY_SIZE;
+#ifdef __STDIO_VCP
+const int _sys_flags = SYS_FLAGS_STDIO_VCP;
+#else
+const int _sys_flags = SYS_FLAGS_STDIO_FIFO;
+#endif
 
 
 #define USER_ROOT 0
@@ -113,7 +124,7 @@ usbfifo_state_t usb0_fifo_state HWPL_SYS_MEM;
 
 #define STDIO_BUFFER_SIZE 128
 
-#ifdef STDIO_VCP
+#ifdef __STDIO_VCP
 char usb0_fifo_buffer_alt[STDIO_BUFFER_SIZE];
 const usbfifo_cfg_t usb0_fifo_cfg_alt = USBFIFO_DEVICE_CFG(0,
 		LINK_USBPHY_BULK_ENDPOINT_ALT,
@@ -187,7 +198,7 @@ const device_t devices[] = {
 		//ENC28J60_DEVICE("eth0", 1, 0, 0, 6, 20000000, &enc28j60_cfg, &enc28j60_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//FIFO buffers used for std in and std out
-#ifdef STDIO_VCP
+#ifdef __STDIO_VCP
 		USBFIFO_DEVICE("stdio", &usb0_fifo_cfg_alt, &usb0_fifo_state_alt, 0666, USER_ROOT, GROUP_ROOT),
 #else
 		FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
