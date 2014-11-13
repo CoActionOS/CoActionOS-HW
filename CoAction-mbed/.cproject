@@ -16,8 +16,8 @@
 					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0x0"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
-					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
+					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
@@ -94,8 +94,8 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
-					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
+					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
@@ -125,6 +125,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.607347625" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__CoActionOS__"/>
 									<listOptionValue builtIn="false" value="__${ARCH}"/>
+									<listOptionValue builtIn="false" value="XIVELY"/>
 									<listOptionValue builtIn="false" value="__PHY_USB"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1754543919" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -173,10 +174,10 @@
 					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0x40000"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
-					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
-					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x2"/>
+					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -206,6 +207,7 @@
 									<listOptionValue builtIn="false" value="__CoActionOS__"/>
 									<listOptionValue builtIn="false" value="__${ARCH}"/>
 									<listOptionValue builtIn="false" value="__PHY_USB"/>
+									<listOptionValue builtIn="false" value="XIVELY"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2108572084" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -253,10 +255,10 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
-					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x2"/>
+					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x2"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -287,6 +289,7 @@
 									<listOptionValue builtIn="false" value="__${ARCH}"/>
 									<listOptionValue builtIn="false" value="__PHY_USB"/>
 									<listOptionValue builtIn="false" value="__HWPL_DEBUG"/>
+									<listOptionValue builtIn="false" value="XIVELY"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.193772672" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -334,8 +337,8 @@
 					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0x0"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
-					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
+					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
@@ -414,10 +417,10 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
-					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0xCDEF1234"/>
+					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1769"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0xCDEF1234"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>

@@ -16,10 +16,11 @@
 					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0x40000"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
-					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
-					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-g -fmessage-length=0 -fomit-frame-pointer"/>
 					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -44,8 +45,13 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1604263445" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.582390738" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.308019714" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.other.545968704" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-g -c -fmessage-length=0 -Os -D__lpc17xx -D__CoActionOS__" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.545968704" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.dialect.std.1972980408" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.misc.ansi.1077729040" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.401136669" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__CoActionOS__"/>
+									<listOptionValue builtIn="false" value="__${ARCH}"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2019357839" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1250337925" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
@@ -93,10 +99,11 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
-					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
-					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-g -fmessage-length=0 -fomit-frame-pointer"/>
 					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -121,12 +128,13 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.338967720" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.2034652291" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.763540937" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.other.334574737" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Os" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.334574737" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.505408409" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__${ARCH}"/>
 									<listOptionValue builtIn="false" value="__CoActionOS__"/>
 									<listOptionValue builtIn="false" value="__HWPL_DEBUG"/>
 								</option>
+								<option id="gnu.c.compiler.option.misc.ansi.178277479" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1009099146" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.916673209" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
@@ -173,10 +181,11 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
-					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
-					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-g -fmessage-length=0 -fomit-frame-pointer"/>
 					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -201,10 +210,11 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1812820364" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1409898569" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1271660634" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.other.1336493624" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Os -D__lpc17xx -D__CoActionOS__" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.1336493624" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.727226768" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__SECURE"/>
 								</option>
+								<option id="gnu.c.compiler.option.misc.ansi.1220783513" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.382677112" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.193177171" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
@@ -251,10 +261,11 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
-					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-g -fmessage-length=0 -fomit-frame-pointer"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -279,11 +290,12 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.300493840" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.894361474" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.699864934" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.other.1493668564" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-g -c -fmessage-length=0 -Os -D__lpc17xx -D__CoActionOS__" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.1493668564" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.dialect.std.1459120631" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.309205159" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__PUBLIC"/>
 								</option>
+								<option id="gnu.c.compiler.option.misc.ansi.299789316" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1160497815" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.430268557" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
@@ -331,10 +343,11 @@
 					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0x40000"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-cm3-eabi"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
-					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc1759"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\CoActionOS-Compiler\CoActionOS\bin"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-g -fmessage-length=0 -fomit-frame-pointer"/>
 					<stringMacro name="ARCH" type="VALUE_TEXT" value="lpc17xx"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="../script/post-process.bat"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
@@ -359,13 +372,14 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.547814763" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1462065560" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.878024310" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.other.1224725763" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Os" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.1224725763" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1706425696" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__${ARCH}"/>
 									<listOptionValue builtIn="false" value="__CoActionOS__"/>
 									<listOptionValue builtIn="false" value="__HWPL_DEBUG"/>
 									<listOptionValue builtIn="false" value="__STDIO_VCP"/>
 								</option>
+								<option id="gnu.c.compiler.option.misc.ansi.1180980680" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.783321096" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.857930966" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">

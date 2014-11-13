@@ -242,7 +242,7 @@ const sysfs_t const sysfs_list[] = {
 		SYSFS_APP("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
 		SYSFS_DEV("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
 		CAFS_LITE("/home", &cafs_lite_cfg, SYSFS_ALL_ACCESS), //the list the CAFS lite fs
-		//FATFS("/media", &fatfs_cfg, SYSFS_ALL_ACCESS), //fat filesystem with external SD card
+		//FATFS("/home", &fatfs_cfg, SYSFS_ALL_ACCESS), //fat filesystem with external SD card
 		SYSFS_ROOT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
 		SYSFS_TERMINATOR
 };

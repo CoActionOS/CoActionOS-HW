@@ -98,12 +98,10 @@ extern const int microcomputer_osc_freq;
 #define LINK_USB_DESC_PRODUCT_STRING 'C','o','A','c','t','i','o','n','O','S'
 #define LINK_USB_DESC_SERIAL_STRING '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'
 
-#ifdef __STDIO_VCP
 #define LINK_USB_DESC_VCP_0_SIZE 20
 #define LINK_USB_DESC_VCP_1_SIZE 21
 #define LINK_USB_DESC_VCP_0 'C','o','A','c','t','i','o','n','O','S',' ','L','i','n','k',' ','P','o','r','t'
 #define LINK_USB_DESC_VCP_1 'C','o','A','c','t','i','o','n','O','S',' ','S','t','d','i','o',' ','P','o','r','t'
-#endif
 
 
 #define LINK_REQD_CURRENT 500
@@ -120,8 +118,8 @@ struct HWPL_PACK link_usb_string_t {
 	usb_declare_string(LINK_USB_DESC_MANUFACTURER_SIZE) manufacturer;
 	usb_declare_string(LINK_USB_DESC_PRODUCT_SIZE) product;
 	usb_declare_string(LINK_USB_DESC_SERIAL_SIZE) serial;
-#ifdef __STDIO_VCP
 	usb_declare_string(LINK_USB_DESC_VCP_0_SIZE) vcp0;
+#ifdef __STDIO_VCP
 	usb_declare_string(LINK_USB_DESC_VCP_1_SIZE) vcp1;
 #endif
 };
@@ -372,9 +370,9 @@ const struct link_usb_string_t link_string_desc HWPL_WEAK = {
 		.manufacturer = usb_assign_string(LINK_USB_DESC_MANUFACTURER_SIZE, LINK_USB_DESC_MANUFACTUER_STRING),
 		.product = usb_assign_string(LINK_USB_DESC_PRODUCT_SIZE, LINK_USB_DESC_PRODUCT_STRING),
 		.serial = usb_assign_string(LINK_USB_DESC_SERIAL_SIZE, 0)
-#ifdef __STDIO_VCP
 		, //dynamically load SN based on silicon
 		.vcp0 = usb_assign_string(LINK_USB_DESC_VCP_0_SIZE, LINK_USB_DESC_VCP_0),
+#ifdef __STDIO_VCP
 		.vcp1 = usb_assign_string(LINK_USB_DESC_VCP_1_SIZE, LINK_USB_DESC_VCP_1)
 #endif
 

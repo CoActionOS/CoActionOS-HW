@@ -21,7 +21,6 @@
 #define FILEHANDLE int
 #define DEVICE_ID_LENGTH 4
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif

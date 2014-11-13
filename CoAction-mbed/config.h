@@ -8,10 +8,6 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-
 #define BCD_VERSION 0x132
-
-#define XIVELY
-
 
 #endif /* CONFIG_H_ */

@@ -18,16 +18,16 @@
 #include <link.h>
 #include <sysfs.h>
 #include <cafs_lite.h>
+#include <dev/sys.h>
 
 #include "link_phy_usb.h"
 
 
 #define CAOS_SYSTEM_CLOCK 72000000
-#define CAOS_SYSTEM_MEMORY_SIZE 8192
+#define CAOS_SYSTEM_MEMORY_SIZE 8192*2
 
 
 /* DO NOT MODIFY SECTION */
-const int cpu_init_freq = CAOS_SYSTEM_CLOCK;
 const int caoslib_system_memory_size = CAOS_SYSTEM_MEMORY_SIZE;
 const uint32_t clk_nsec_div = (uint32_t)((uint64_t)1024 * 1000000000 / CAOS_SYSTEM_CLOCK);
 const uint32_t clk_usec_mult = (uint32_t)(CAOS_SYSTEM_CLOCK / 1000000);
@@ -50,6 +50,9 @@ const char _stderr_dev[] = "/dev/stdio-out";
 const char _sys_name[] = "Haoyu LPC1788";
 const char _sys_version[] = "0.0.1";
 
+
+const int _sys_memory_size = CAOS_SYSTEM_MEMORY_SIZE;
+const int _sys_flags = SYS_FLAGS_STDIO_FIFO;
 
 #define USER_ROOT 0
 #define GROUP_ROOT 0

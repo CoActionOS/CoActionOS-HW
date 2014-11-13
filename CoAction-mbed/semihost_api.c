@@ -43,17 +43,13 @@
 #define USR_POWERDOWN     (RESERVED_FOR_USER_APPLICATIONS + 4)
 #define USR_DISABLEDEBUG (RESERVED_FOR_USER_APPLICATIONS + 5)
 
-#include <stdio.h>
 #if DEVICE_LOCALFILESYSTEM
 FILEHANDLE semihost_open(const char* name, int openmode) {
-	int f;
     uint32_t args[3];
     args[0] = (uint32_t)name;
     args[1] = (uint32_t)openmode;
     args[2] = (uint32_t)strlen(name);
-    f =  __semihost(SYS_OPEN, args);
-    return f;
-
+    return __semihost(SYS_OPEN, args);
 }
 
 int semihost_close(FILEHANDLE fh) {
@@ -163,4 +159,3 @@ int semihost_disabledebug(void) {
 }
 
 #endif
-
